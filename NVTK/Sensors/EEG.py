@@ -1,5 +1,5 @@
-import serial
 from openbci import cyton as bci
+
 
 class EEGMonitor(object):
     """
@@ -36,8 +36,7 @@ class EEGMonitor(object):
             else:
                 self.board.ser_write(bytes(c))
 
-
-    #def logData(self, sample):
+    # def logData(self, sample):
 
     def startEEGStreaming(self):
         self.streaming = True

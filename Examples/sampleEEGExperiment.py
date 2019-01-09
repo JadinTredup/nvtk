@@ -1,19 +1,14 @@
 import argparse
-import pygame
 import os
-import sys
-import serial
-import time, timeit
+import timeit
 
-from threading import Thread
+import pygame
 
-#from NVTK.Sensors import EEG
+# from NVTK.Sensors import EEG
 
 IMAGE_DIR = "Images"
 PLACEHOLDER_FN = "RandomGnome.png"
 IMG = os.path.join(IMAGE_DIR, PLACEHOLDER_FN)
-
-
 
 #################################################################
 #                                                               #
@@ -39,14 +34,14 @@ nb_samples_in = -1
 nb_samples_out = -1
 
 # last seen values for interpolation
-last_values = [0]*NB_CHANNELS
+last_values = [0] * NB_CHANNELS
 
 # Counter to trigger duplications...
 leftover_duplications = 0
 
 tick = timeit.default_timer()
 
-if __name__=="__main__":
+if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="NVTK - ERP Experiment")
     parser.add_argument('--trials', default=50, type=int,
@@ -58,7 +53,7 @@ if __name__=="__main__":
     num_trials = args.trials
     record_sd = args.sd
     time_per_trial = 5  # Seconds
-    total_time = num_trials*time_per_trial
+    total_time = num_trials * time_per_trial
 
     # Initialize Pygame
     pygame.init()
@@ -68,10 +63,10 @@ if __name__=="__main__":
         pygImg = pygame.image.load(IMG)
     except:
         msg = "\nNo Stimulus Available for Presentation. Exiting"
-        raise(UserWarning, msg)
+        raise (UserWarning, msg)
 
     # screen = pygame.display.set_mode((0,0),pygame.FULLSCREEN)
-    screen = pygame.display.set_mode((800,470))
+    screen = pygame.display.set_mode((800, 470))
     screenrect = screen.get_rect()
     pygImg.convert_alpha()
     background = pygame.Surface(screen.get_size()).convert()
@@ -80,7 +75,7 @@ if __name__=="__main__":
     font = pygame.font.SysFont('mono', 24, bold=True)
 
     # Inisitalize EEG
-    #eeg = EEGMonitor()
+    # eeg = EEGMonitor()
 
     # Start stimulus loop
     x = 10
@@ -98,6 +93,7 @@ if __name__=="__main__":
         if playtime < 60:
             task = "Eyes Open"
         elif (playtime >= 120) & (playtime < 120):
+            task = "Eyes Closed"
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -106,7 +102,7 @@ if __name__=="__main__":
                 if event.key == pygame.K_LEFT:
                     screen.blit(pygImg, (x, y))
                 elif event.key == pygame.K_RIGHT:
-                    screen.blit(background, (0,0))
+                    screen.blit(background, (0, 0))
                 elif event.key == pygame.K_ESCAPE:
                     running = False
 
@@ -121,5 +117,5 @@ if __name__=="__main__":
 
     print("Experiment over")
 
-    #eeg.stopEEGStreaming()
+    # eeg.stopEEGStreaming()
     pygame.quit()
