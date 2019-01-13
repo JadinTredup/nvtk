@@ -37,5 +37,5 @@ leftover_duplications = 0
 tick = timeit.default_timer()
 
 if __name__ == "__main__":
-    experiment = eegBaseline()
+    experiment = eegBaseline('Baseline.txt')
     experiment.Run()

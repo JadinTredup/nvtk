@@ -1,4 +1,5 @@
 from openbci import cyton as bci
+from NVTK.utils.EEGUtils import parse_eeg_data
 
 
 class EEGMonitor(object):
@@ -9,7 +10,7 @@ class EEGMonitor(object):
     """
 
     # Initialization functions
-    def __init__(self, port_name=STD_PORT, daisy_board=True):
+    def __init__(self, port_name=STD_PORT, daisy_board=True, save_fn=None):
 
         self.board = bci.OpenBCICyton(port=port_name,
                                       baud=BAUD_RATE,
@@ -20,6 +21,7 @@ class EEGMonitor(object):
         self.streaming = False
         self.recording = False
         self.startMonitor()
+
 
     def startMonitor(self):
         """
@@ -36,12 +38,28 @@ class EEGMonitor(object):
             else:
                 self.board.ser_write(bytes(c))
 
-    # def logData(self, sample):
+    def printData(self, sample):
+        while self.streaming:
+            print("----------------")
+            print("%f"%(sample.id))
+            print(sample.channel_data.type)
+            print(sample.aux_data)
+            print("----------------")
 
-    def startEEGStreaming(self):
+    def saveData(self, sample):
+        while self.streaming:
+            data_string = parse_eeg_data(sample.id, sample.channel_data, sample.aux_data)
+            self.save_file.write(data_string)
+
+    def startEEGStreaming(self, save_fn=None):
         self.streaming = True
-        self.board.start_streaming(self.logData)
+        if save_fn is not None:
+            self.save_file = open(save_fn, 'w')
+            self.board.start_streaming(self.saveData)
+        else:
+            self.board.start_streaming(self.logData)
 
     def stopEEGStreaming(self):
         self.streaming = False
         self.board.stop()
+        self.save_file.close()

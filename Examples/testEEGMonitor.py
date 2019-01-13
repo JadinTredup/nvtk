@@ -54,7 +54,7 @@ class EEGMonitor(object):
     # Initialization functions
     def __init__(self, port_name=None, daisy_board=True):
 
-        self.board = bci.OpenBCICyton(port='/dev/ttyUSB1',
+        self.board = bci.OpenBCICyton(port='/dev/ttyUSB0',
                                       baud=BAUD_RATE,
                                       daisy=daisy_board,
                                       filter_data=False,
@@ -82,13 +82,14 @@ class EEGMonitor(object):
 
     def logData(self, sample):
         print("----------------")
-        print("%f"%(sample.id))
-        print(sample.channel_data)
-        print(sample.aux_data)
+        print(type(sample.id))
+        print(type(sample.channel_data))
+        print(type(sample.aux_data))
         print("----------------")
 
     def startEEGStreaming(self):
         self.streaming = True
+        if self.
         self.board.start_streaming(self.logData)
 
 
