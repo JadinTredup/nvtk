@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 from collections import namedtuple
 # from NVTK.Sensors.GalvanicSkinResponse import GSRSensor
 # from NVTK.Sensors.EyeTracker import PupilLabs
-from NVTK.GUI.Windows import MainWindow
+from NVTK.GUI.Windows import IntroductionWindow, RunSystem
 
 # Green & tan color scheme
 sg.ChangeLookAndFeel('GreenTan')
@@ -11,7 +11,19 @@ font = 'Helvetica'
 
 InitInfo = namedtuple('InitInfo', 'EEG GSR EyeTracking Test Record Experiment Display FileDir FileName')
 
-if __name__ == '__main__':
-    main_window = MainWindow()
-    trial_info = main_window.RunWindow()
+def Intro():
+    main_window = IntroductionWindow()
+    selection = main_window.RunWindow()
+    return selection
+
+def SystemInitialization():
+    system_window = RunSystem()
+    trial_info = system_window.RunWindow()
     print(trial_info)
+
+if __name__ == '__main__':
+    selection = Intro()
+    print(selection)
+
+    if selection == 'Run System':
+        SystemInitialization()

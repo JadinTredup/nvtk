@@ -9,14 +9,40 @@ from collections import namedtuple
 
 InitInfo = namedtuple('InitInfo', 'EEG GSR EyeTracking Test Record Experiment Display FileDir FileName')
 
-class MainWindow():
+class IntroductionWindow():
 
     def __init__(self):
         self.CreateLayout()
 
     def CreateLayout(self):
         font = 'Helvetica'
-        self.layout = [[sg.Text('Nonverbal Toolkit v0.1', font=(font, 16), justification='center')],
+        self.layout = [[sg.Text('Nonverbal Toolkit', font=(font, 16), justification='center')],
+                       [sg.Text('What would you like to do?', font=(font, 16), justification='center')],
+                       [sg.InputOptionMenu(('Run System', 'Data Analysis'))],
+                       [sg.Submit(), sg.Cancel()]]
+
+    def RunWindow(self):
+        main_window = sg.Window('Nonverbal Toolkit', font=(font, 12)).Layout(self.layout)
+        RUNNING = True
+
+        # Start main loop
+        while RUNNING:
+            event, values = main_window.Read()
+            if event == 'Submit':
+                RUNNING = False
+                selection = values[0]
+
+        return selection
+
+
+class RunSystem():
+
+    def __init__(self):
+        self.CreateLayout()
+
+    def CreateLayout(self):
+        font = 'Helvetica'
+        self.layout = [[sg.Text('Nonverbal Toolkit', font=(font, 16), justification='center')],
                 [sg.Text('Sensors', font=(font, 14), justification='left')],
                     [sg.Checkbox('EEG', size=(12,1), default=True), sg.Checkbox('GSR', size=(12,1)), sg.Checkbox('Eye-Tracking', size=(12,1), default=True)],
                 [sg.Text('_'*100, size=(65,1))],
