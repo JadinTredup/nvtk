@@ -10,7 +10,7 @@ class EEGMonitor(object):
     """
 
     # Initialization functions
-    def __init__(self, port_name=STD_PORT, daisy_board=True, save_fn=None):
+    def __init__(self, port_name=STD_PORT, daisy_board=True, save_fn=None, channel_num=16):
 
         self.board = bci.OpenBCICyton(port=port_name,
                                       baud=BAUD_RATE,
@@ -18,6 +18,8 @@ class EEGMonitor(object):
                                       filter_data=False,
                                       scaled_output=True,
                                       log=None)
+        self.channel_num = 16
+        self.sample_rate = 256
         self.streaming = False
         self.recording = False
         self.data = []
@@ -40,21 +42,6 @@ class EEGMonitor(object):
             else:
                 self.board.ser_write(bytes(c))
 
-    def createInfo(self):
-        """
-        Create the MNE info data type for creating the RawArray later
-        """
-        channel_num = 16
-        sample_rate = 256
-        channel_names = ["Fp1", "Fp2", "C3", "C4", "P7", "P8", "O1", "O2",
-                         "F7", "F8", "F3", "F4", "T7", "T8", "P3", "P4"]
-        channel_types = ["EEG", "EEG", "EEG", "EEG", "EEG", "EEG", "EEG", "EEG",
-                         "EEG", "EEG", "EEG", "EEG", "EEG", "EEG", "EEG", "EEG"]
-        montage = 'standard_1020'
-        self.mne_info = mne.create_info(channel_num, sample_rate, channel_names, channel_types, sample_rate, montage)
-
-    def createRaw(self):
-        self.raw = mne.io.RawArray(self.data, self.mne_info)
 
     def printData(self, sample):
         while self.streaming:
@@ -73,27 +60,11 @@ class EEGMonitor(object):
 
     def startEEGStreaming(self):
         self.streaming = True
-        self.board.start_streaming(self.saveDataMNE)
+        #self.board.start_streaming(self.saveDataMNE)
+        self.board.start_streaming(self.printData)
 
     def stopEEGStreaming(self):
         self.createRaw()
         self.streaming = False
         self.board.stop()
         #self.save_file.close()
-
-
-
-
-    # def saveData(self, sample):
-    #     while self.streaming:
-    #         data_string = parse_eeg_data(sample.id, sample.channel_data, sample.aux_data)
-    #         self.save_file.write(data_string)
-    #
-    #
-    # def startEEGStreaming(self, save_fn=None):
-    #     self.streaming = True
-    #     if save_fn is not None:
-    #         self.save_file = open(save_fn, 'w')
-    #         self.board.start_streaming(self.saveData)
-    #     else:
-    #         self.board.start_streaming(self.logData)
