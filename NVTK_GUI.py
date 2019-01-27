@@ -2,7 +2,8 @@ import PySimpleGUI as sg
 from collections import namedtuple
 # from NVTK.Sensors.GalvanicSkinResponse import GSRSensor
 # from NVTK.Sensors.EyeTracker import PupilLabs
-from NVTK.GUI.Windows import IntroductionWindow, RunSystem
+from NVTK.GUI.Windows import IntroductionWindow, RunSystem, TrialDescription
+from NVTK.Experiments.DataCollection import DataCollection
 
 # Green & tan color scheme
 sg.ChangeLookAndFeel('GreenTan')
@@ -21,9 +22,19 @@ def SystemInitialization():
     trial_info = system_window.RunWindow()
     return trial_info
 
+def RecordingInitialization():
+    info_window = TrialDescription()
+    description = info_window.RunWindow()
+    return description
+
 if __name__ == '__main__':
     selection = Intro()
     print(selection)
+
+    if selection == 'Free Recording':
+        desc, dir = RecordingInitialization()
+        trial = DataCollection(description=desc, save_dir=dir)
+
 
     if selection == 'Run System':
         trial_info = SystemInitialization()

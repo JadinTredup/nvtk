@@ -18,7 +18,7 @@ class IntroductionWindow():
         font = 'Helvetica'
         self.layout = [[sg.Text('Nonverbal Toolkit', font=(font, 16), justification='center')],
                        [sg.Text('What would you like to do?', font=(font, 16), justification='center')],
-                       [sg.InputOptionMenu(('Run System', 'Data Analysis'))],
+                       [sg.InputOptionMenu(('Run Experiments', 'Free Record', 'Data Analysis'))],
                        [sg.Submit(), sg.Cancel()]]
 
     def RunWindow(self):
@@ -81,6 +81,7 @@ class TrialDescription():
     def CreateLayout(self):
         font = 'Helvetica'
         self.layout = [[sg.Text('Enter information about trial', font=(font, 16), justification='center')],
+                       [sg.Text('Save Directory:', size=(12, 1)), sg.In()],
                        [sg.Multiline(size=(35, 3))],
                        [sg.Submit(), sg.Cancel()]]
 
@@ -93,6 +94,7 @@ class TrialDescription():
             event, values = main_window.Read()
             if event == 'Submit':
                 RUNNING = False
-                decription = values[0]
+                save_dir = values[0]
+                decription = values[1]
 
-        return description
+        return description, save_dir

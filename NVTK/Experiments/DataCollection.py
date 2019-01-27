@@ -28,3 +28,9 @@ class DataCollection():
         f = open(self.info_file, 'w+')
         f.write(str(description))
         f.close()
+
+    def RunTrial(self):
+        self.eeg_proc = mp.Process(target=self.eeg.startEEGStreaming(save=True))
+        self.gsr_proc = mp.Process(target=self.gsr.RecordData())
+        self.eeg_proc.start()
+        self.gsr_proc.start()
