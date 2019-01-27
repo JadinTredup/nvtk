@@ -11,22 +11,48 @@ class ArduinoGSR():
     will eventually take. Once the sensor is aquired and implemented then the
     class will be updated to be functional.
     """
-    def __init__(self, serial_port=None):
+    def __init__(self, serial_port=None, save_fn=None):
+        self.streaming = False
+        self.recording = False
         if serial_port==None:
             serial_port = STD_PORT
 
         self.ser = serial.Serial(serial_port, 9600)
         self.values = []
 
+        if save_fn is None:
+            save_fn = 'GSR-Temp.txt'
+
+        self.InitSaveFile(save_fn)
+
+
+    def InitSaveFile(self, fn):
+        self.f = open(fn, 'w+')
+
 
     def StreamData(self):
-        value = self.ser.readline
-        value = int(value)
-        print(value)
+        self.streaming = True
+
+        while self.streaming == True:
+            value = self.ser.readline
+            value = int(value)
+            print(value)
 
 
     def RecordData(self):
-        value = self.ser.readline
-        value = int(value)
-        values.append(value)
-        print(value)
+        self.recording = True:
+
+        while self.recording == True:
+            value = self.ser.readline
+            value = int(value)
+            value_str = str(value) + '\n'
+            self.f.write(value_str)
+
+        self.f.close()
+
+    def StopData(self):
+        if self.recording == True:
+            self.recording = False
+
+        if self.streaming == True:
+            self.streaming = False

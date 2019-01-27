@@ -72,81 +72,27 @@ class RunSystem():
 
         return trial_info
 
-class DataMonitor():
 
-    def __init__(self, eeg=None, gsr=None, eye_tracker=None, font=None):
+class TrialDescription():
 
-        if eeg is not None:
-            self.eeg_channels = eeg.channel_num
-            self.eeg = True
-            self.eeg_data = []
-        else:
-            self.eeg = False
+    def __init__(self):
+        self.CreateLayout()
 
-        if gsr is not None:
-            self.gsr = True
-        else:
-            self.gsr = False
+    def CreateLayout(self):
+        font = 'Helvetica'
+        self.layout = [[sg.Text('Enter information about trial', font=(font, 16), justification='center')],
+                       [sg.Multiline(size=(35, 3))],
+                       [sg.Submit(), sg.Cancel()]]
 
-        if eye_tracker is not None:
-            self.eye_tracker = True
-        else:
-            self.eye_tracker = False
+    def RunWindow(self):
+        main_window = sg.Window('Nonverbal Toolkit', font=(font, 12)).Layout(self.layout)
+        RUNNING = True
 
-        if font == None:
-            self.font = 'Helvetica'
-        else:
-            self.font = font
+        # Start main loop
+        while RUNNING:
+            event, values = main_window.Read()
+            if event == 'Submit':
+                RUNNING = False
+                decription = values[0]
 
-    def CreateElements(self):
-        self.header = sg.Text('Nonverbal Toolkit - Data Monitor', font=(self.font, 16), justification='center')
-
-        if self.eeg:
-            self.eeg_title = sg.Text('EEG Data', font=(self.font, 16), justification='left')
-            self.eeg_channel_elements = []
-            for i in range(self.eeg_channels):
-                key = 'eeg' + str(i)
-                element = sg.Canvas(size=(1280,50), key=key)
-                self.eeg_channel_elements.append(element)
-
-        if self.eye_tracker:
-            self.eye_title = sg.Text('Eye-Tracking Monitor', font=(self.font, 16), justification='left')
-            self.eye_stream = sg.Canvas(size=(640, 480), key='eye')
-            self.world_stream = sg.Canvas(size=(640, 480), key='world')
-
-        if self.gsr:
-            self.gsr_title = sg.Text('GSR Monitor', font=(self.font, 16), justification='left')
-
-    def PlotEEG(self, sample):
-
-        fig = Figure()
-        ax1 = fig.add_subplot(12, 1, 1)
-
-        ax2 = fig.add_subplot(12, 1, 2, sharex=ax1)
-
-        ax3 = fig.add_subplot(12, 1, 3, sharex=ax1)
-
-        ax4 = fig.add_subplot(12, 1, 4, sharex=ax1)
-
-        ax5 = fig.add_subplot(12, 1, 5, sharex=ax1)
-
-        ax6 = fig.add_subplot(12, 1, 6, sharex=ax1)
-
-        ax7 = fig.add_subplot(12, 1, 7, sharex=ax1)
-
-        ax8 = fig.add_subplot(12, 1, 8, sharex=ax1)
-
-        ax9 = fig.add_subplot(12, 1, 9, sharex=ax1)
-
-        ax10 = fig.add_subplot(12, 1, 10, sharex=ax1)
-
-        ax11 = fig.add_subplot(12, 1, 11, sharex=ax1)
-
-        ax12 = fig.add_subplot(12, 1, 12, sharex=ax1)
-
-    def FormatEEGData(self, sample):
-        self.eeg_data = np.delete(self.eeg_data, 0, 1)
-        self.eeg_data = np.append(self.eeg_data, sample)
-
-    def InitEEGArray(self):
-        self.eeg_data = np.zeros((self.eeg_channels,1250))
+        return description

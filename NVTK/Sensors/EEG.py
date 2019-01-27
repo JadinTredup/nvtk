@@ -24,10 +24,13 @@ class EEGMonitor(object):
         self.recording = False
         self.data = []
         self.startMonitor()
-        self.createInfo()
+        if save_fn is None:
+            save_fn = 'EEG-Temp.txt'
+
+        self.InitSaveFile(save_fn)
 
 
-    def startMonitor(self):
+    def StartMonitor(self):
         """
         This function sends a command to the bci board
         to reset the system and prepare it for new commands.
@@ -43,6 +46,10 @@ class EEGMonitor(object):
                 self.board.ser_write(bytes(c))
 
 
+    def InitSaveFile(self, fn):
+        self.f = open(fn, 'w+')
+
+
     def printData(self, sample):
         while self.streaming:
             print("----------------")
@@ -54,17 +61,20 @@ class EEGMonitor(object):
 
     def saveData(self, sample):
         while self.streaming:
-            channel = np.asarray(sample.channel_data)
-            self.data.append(channel)
+            data_str = parse_eeg_data(sample.id, sample.channel_data, sample.aux_data)
+            self.f.write(data_str)
+
+        self.f.close()
 
 
-    def startEEGStreaming(self):
+    def startEEGStreaming(self, save=False):
         self.streaming = True
-        #self.board.start_streaming(self.saveDataMNE)
-        self.board.start_streaming(self.printData)
+        if save=True:
+            self.board.start_streaming(self.saveData)
+        else:
+            self.board.start_streaming(self.printData)
+
 
     def stopEEGStreaming(self):
-        self.createRaw()
         self.streaming = False
         self.board.stop()
-        #self.save_file.close()

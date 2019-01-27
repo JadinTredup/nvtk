@@ -27,3 +27,5 @@ if __name__ == '__main__':
 
     if selection == 'Run System':
         trial_info = SystemInitialization()
+
+    print(trial_info)
