@@ -19,11 +19,11 @@ def Intro():
 def SystemInitialization():
     system_window = RunSystem()
     trial_info = system_window.RunWindow()
-    print(trial_info)
+    return trial_info
 
 if __name__ == '__main__':
     selection = Intro()
     print(selection)
 
     if selection == 'Run System':
-        SystemInitialization()
+        trial_info = SystemInitialization()

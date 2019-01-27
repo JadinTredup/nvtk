@@ -1,49 +1,32 @@
 """
-This code needs to be run either directly on the raspberry pi or via SSH
+The grove GSR sensor can be added to either an arduino or a raspberry pi. As of right now,
+the only implementatio supported is the Arduino version.
 """
+import serial
+STD_PORT = '/dev/ttyACM0'
 
-import math
-import sys
-import time
-from grove.adc import ADC
-
-
-class GroveGSRSensor:
-
-    def __init__(self, channel):
-        self.channel = channel
-        self.adc = ADC()
-
-    @property
-    def GSR(self):
-        value = self.adc.read(self.channel)
-        return value
-
-Grove = GroveGSRSensor
-
-#
-# def main():
-#     if len(sys.argv) < 2:
-#         print('Usage: {} adc_channel'.format(sys.argv[0]))
-#         sys.exit(1)
-#
-#     sensor = GroveGSRSensor(int(sys.argv[1]))
-#
-#     print('Detecting...')
-#     while True:
-#         print('GSR value: {0}'.format(sensor.GSR))
-#         time.sleep(.3)
-
-class GSRSensor():
+class ArduinoGSR():
     """
     This class is currently a placeholder to represent the format the GSR class
     will eventually take. Once the sensor is aquired and implemented then the
     class will be updated to be functional.
     """
-    def __init__(self):
+    def __init__(self, serial_port=None):
+        if serial_port==None:
+            serial_port = STD_PORT
 
-    def StartSensor(self):
+        self.ser = serial.Serial(serial_port, 9600)
+        self.values = []
+
 
     def StreamData(self):
+        value = self.ser.readline
+        value = int(value)
+        print(value)
+
 
     def RecordData(self):
+        value = self.ser.readline
+        value = int(value)
+        values.append(value)
+        print(value)
