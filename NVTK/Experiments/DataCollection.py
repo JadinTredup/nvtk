@@ -6,7 +6,7 @@ from NVTK.Sensors.GalvanicSkinResponse import ArduinoGSR
 
 class DataCollection():
 
-    def __init__(self, eeg=True, gsr=True, eye_tracking=False, description, save_dir):
+    def __init__(self, eeg=True, gsr=True, eye_tracking=False, description=None, save_dir=None):
 
         if eeg == True:
             self.eeg = EEGMonitor()

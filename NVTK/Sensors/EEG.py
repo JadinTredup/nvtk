@@ -1,6 +1,10 @@
+import sys
+import timeit
 from openbci import cyton as bci
 from NVTK.utils.EEGUtils import parse_eeg_data
 
+STD_PORT = '/dev/ttyUSB0'
+BAUD_RATE = 115200
 
 class EEGMonitor(object):
     """
@@ -17,17 +21,20 @@ class EEGMonitor(object):
                                       daisy=daisy_board,
                                       filter_data=False,
                                       scaled_output=True,
-                                      log=None)
+                                      log=None,
+                                      timeout=None)
         self.channel_num = 16
         self.sample_rate = 256
         self.streaming = False
         self.recording = False
         self.data = []
-        self.startMonitor()
+        self.StartMonitor()
+        print("Monitor Started")
         if save_fn is None:
             save_fn = 'EEG-Temp.txt'
 
         self.InitSaveFile(save_fn)
+        print("Save File Initialized")
 
 
     def StartMonitor(self):
@@ -40,6 +47,7 @@ class EEGMonitor(object):
         """
         s = 'svCd'
         for c in s:
+            print(c)
             if sys.hexversion > 0x03000000:
                 self.board.ser_write(bytes(c, 'utf-8'))
             else:
@@ -60,8 +68,11 @@ class EEGMonitor(object):
 
 
     def saveData(self, sample):
+        start = timeit.default_timer()
         while self.streaming:
-            data_str = parse_eeg_data(sample.id, sample.channel_data, sample.aux_data)
+            step = timeit.default_timer()
+            timestamp = step - start
+            data_str = parse_eeg_data(sample.id, sample.channel_data, sample.aux_data, timestamp)
             self.f.write(data_str)
 
         self.f.close()
@@ -69,7 +80,7 @@ class EEGMonitor(object):
 
     def startEEGStreaming(self, save=False):
         self.streaming = True
-        if save=True:
+        if save==True:
             self.board.start_streaming(self.saveData)
         else:
             self.board.start_streaming(self.printData)

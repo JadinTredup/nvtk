@@ -36,7 +36,5 @@ if __name__ == '__main__':
         trial = DataCollection(description=desc, save_dir=dir)
 
 
-    if selection == 'Run System':
+    if selection == 'Run Experiments':
         trial_info = SystemInitialization()
-
-    print(trial_info)

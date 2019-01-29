@@ -3,6 +3,7 @@ The grove GSR sensor can be added to either an arduino or a raspberry pi. As of 
 the only implementatio supported is the Arduino version.
 """
 import serial
+import timeit
 STD_PORT = '/dev/ttyACM0'
 
 class ArduinoGSR():
@@ -34,13 +35,21 @@ class ArduinoGSR():
         self.streaming = True
 
         while self.streaming == True:
-            value = self.ser.readline
+            start = timeit.default_timer()
+            value = self.ser.readline()
             value = int(value)
             print(value)
+            stop = timeit.default_timer()
+            print(stop - start)
+
+    def ReadValue(self):
+        value = self.ser.readline()
+        value = int(value)
+        return value
 
 
     def RecordData(self):
-        self.recording = True:
+        self.recording = True
 
         while self.recording == True:
             value = self.ser.readline
