@@ -3,7 +3,7 @@ import timeit
 from openbci import cyton as bci
 from NVTK.utils.EEGUtils import parse_eeg_data
 
-STD_PORT = '/dev/ttyUSB0'
+STD_PORT = '/dev/ttyUSB1'
 BAUD_RATE = 115200
 
 class EEGMonitor(object):
@@ -16,7 +16,7 @@ class EEGMonitor(object):
     # Initialization functions
     def __init__(self, port_name=STD_PORT, daisy_board=True, save_fn=None, channel_num=16):
 
-        self.board = bci.OpenBCICyton(port=port_name,
+        self.board = bci.OpenBCICyton(port=STD_PORT,
                                       baud=BAUD_RATE,
                                       daisy=daisy_board,
                                       filter_data=False,
@@ -62,7 +62,7 @@ class EEGMonitor(object):
         while self.streaming:
             print("----------------")
             print("%f"%(sample.id))
-            print(sample.channel_data.type)
+            print(sample.channel_data)
             print(sample.aux_data)
             print("----------------")
 
