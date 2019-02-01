@@ -1,9 +1,10 @@
 import sys
 import timeit
+import time
 from openbci import cyton as bci
 from NVTK.utils.EEGUtils import parse_eeg_data
 
-STD_PORT = '/dev/ttyUSB1'
+STD_PORT = '/dev/ttyUSB0'
 BAUD_RATE = 115200
 
 class EEGMonitor(object):
