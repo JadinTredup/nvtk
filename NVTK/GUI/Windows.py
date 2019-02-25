@@ -46,8 +46,8 @@ class RunSystem():
                 [sg.Text('Sensors', font=(font, 14), justification='left')],
                     [sg.Checkbox('EEG', size=(12,1), default=True), sg.Checkbox('GSR', size=(12,1)), sg.Checkbox('Eye-Tracking', size=(12,1), default=True)],
                 [sg.Text('_'*100, size=(65,1))],
-                [sg.Text('Modules', font=(font, 14), justification='left')],
-                    [sg.Radio('Test Sensors', 'module', size=(12,1)), sg.Radio('Free Recording', 'module', size=(12,1)), sg.Radio('Experiments', 'module', size=(12,1))],
+                [sg.Text('Protocols', font=(font, 14), justification='left')],
+                    [sg.Radio('DEAP', 'module', size=(12,1))],
                 [sg.Text('_'*100, size=(65,1))],
                 [sg.Text('Other Flags', font=(font,14), justification='left')],
                     [sg.Checkbox('Display Monitor', default=True)],
@@ -98,3 +98,40 @@ class TrialDescription():
                 decription = values[1]
 
         return description, save_dir
+
+
+class SelfAssessmentManikin():
+
+    def __init__(self):
+        self.CreateLayout()
+
+    def CreateLayout(self):
+        font = 'Helvetica'
+        image_fn = os.path.join('Media', 'SAM.png')
+        self.layout = [[sg.Text('Self-Assesment Manikin')],
+                       [sg.Image(image_fn),
+                            sg.Frame('SAM Ratings', [[
+                                sg.Text('Valence'), sg.Slider(range=(0,10), resolution=0.1, orientation='h')]
+                               [sg.Text('Arousal'), sg.Slider(range=(0,10), resolution=0.1, orientation='h')]
+                               [sg.Text('Dominance'), sg.Slider(range=(0,10), resolution=0.1, orientation='h')]
+                               [sg.Text('Liking'), sg.Slider(range=(0,10), resolution=0.1, orientation='h')]])],
+                       [sg.Submit()]]
+
+    def RunWindow(self):
+        main_window = sg.Window('Self-Assessment Manikin').Layout(self.layout)
+        RUNNING = True
+
+        # Start main loop
+        while RUNNING:
+            event, values = main_window.Read()
+            if event == 'Submit':
+                RUNNING = False
+                sam_values = np.asarray(values)
+
+
+class VideoPlayer():
+
+    def __init__(self):
+        self.CreateLayout()
+
+    def CreateLayout(self):

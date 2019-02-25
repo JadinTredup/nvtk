@@ -49,23 +49,28 @@ class ArduinoGSR():
         return value
 
 
-    def RecordData(self):
-        self.recording = True
-        start = timeit.default_timer()
-        while self.recording == True:
-            step = timeit.default_timer()
-            dt = step - start
-            timestamp = str(dt) + ', '
-            value = self.ser.readline()
-            print(value)
-            value = int(value)
-            value_str = str(value) + '\n'
-            final_entry = timestamp + value_str
-            self.f.write(final_entry)
-            if dt > 10:
-                self.recording = False
+    def RecordData(self, q):
+        while True:
+            if not q.empty():
+                self.recording = q.get()
 
-        self.f.close()
+            if self.recording == True:
+                start = timeit.default_timer()
+                while self.recording == True:
+                    step = timeit.default_time()
+                    dt = step - start
+                    timestamp = str(d) + ', '
+                    value = self.ser.readline()
+                    value = int(value)
+                    value_str = str(value) + '\n'
+                    final_entry = timestamp + value_str
+                    self.f.write(final_entry)
+
+                    if not q.empty():
+                        self.recording = q.get()
+
+                self.f.close()
+
 
     def Stop(self):
         if self.recording == True:
