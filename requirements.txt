@@ -15,7 +15,7 @@ mock==2.0.0
 numpy==1.15.4
 OpenBCI-Python==1.0.0
 pbr==5.1.1
-Pillow==5.4.1
+Pillow==8.1.1
 protobuf==3.6.1
 pygame==1.9.4
 pylsl==1.13.1
